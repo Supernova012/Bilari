@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f5f7" />
+    <title>Chess Study · Bilari</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark" aria-hidden="true">♞</div>
+          <div>
+            <div class="brand-name">Chess Study</div>
+            <div class="brand-subtitle">Bilari · puzzle-trained chess</div>
+          </div>
+        </div>
+        <div class="local-badge"><span class="local-dot"></span> Local app · puzzle data only</div>
+      </header>
+
+      <main>
+        <section class="welcome-row">
+          <div>
+            <h1>Play, study, and compare.</h1>
+            <p>Explore a position with Bilari, challenge the earlier model, or play both sides.</p>
+          </div>
+          <div class="ultra-control card compact-card">
+            <div class="control-heading">
+              <label for="ultraSeconds">Ultra maximum</label>
+              <strong><span id="ultraValue">10</span> sec</strong>
+            </div>
+            <input id="ultraSeconds" type="range" min="1" max="30" value="10" />
+            <div class="range-caption"><span>1 sec</span><span>Hard limit: 30 sec per move</span></div>
+          </div>
+        </section>
+
+        <nav class="mode-tabs" aria-label="App mode">
+          <button class="tab-button active" id="puzzleTab" type="button" role="tab" aria-selected="true">
+            <span class="tab-icon">♙</span> Puzzle
+          </button>
+          <button class="tab-button" id="gameTab" type="button" role="tab" aria-selected="false">
+            <span class="tab-icon">♜</span> Game
+          </button>
+        </nav>
+
+        <div class="workspace">
+          <aside class="control-column">
+            <section class="card mode-panel" id="puzzlePanel">
+              <div class="panel-kicker">01 · Study a position</div>
+              <h2>Puzzle</h2>
+              <p class="help-copy">Paste a FEN to load the board. Bilari can rank moves without search or look ahead with search.</p>
+
+              <label for="puzzleFen" class="field-label">Position FEN</label>
+              <textarea id="puzzleFen" rows="3" spellcheck="false" placeholder="Paste a FEN here"></textarea>
+              <button class="button button-secondary full-width" id="loadPuzzle" type="button">Load position</button>
+
+              <div class="divider"></div>
+
+              <label for="puzzleMode" class="field-label">Move suggestion mode</label>
+              <select id="puzzleMode" class="select-control">
+                <option value="intuition">No lookup · Intuition</option>
+                <option value="low">Low · 0.25 sec</option>
+                <option value="medium">Medium · 1 sec</option>
+                <option value="high">High · 3 sec</option>
+                <option value="ultra">Ultra · use maximum above</option>
+              </select>
+
+              <label for="puzzlePlayStyle" class="field-label spaced-label">After your move</label>
+              <select id="puzzlePlayStyle" class="select-control">
+                <option value="both">I play both sides</option>
+                <option value="reply">Bilari replies for the other side</option>
+              </select>
+
+              <button class="button button-primary full-width suggest-button" id="puzzleSuggest" type="button" disabled>
+                <span aria-hidden="true">✦</span> Suggest a move
+              </button>
+              <p class="fine-print">Intuition uses one policy pass and makes no opponent-response search. Search uses a material and piece-square leaf evaluator.</p>
+            </section>
+
+            <section class="card mode-panel hidden" id="gamePanel">
+              <div class="panel-kicker">02 · Play a game</div>
+              <h2>Choose your match</h2>
+
+              <label for="gameFen" class="field-label">Starting FEN <span class="optional-label">optional</span></label>
+              <textarea id="gameFen" rows="3" spellcheck="false" placeholder="Blank starts from the opening position"></textarea>
+
+              <label for="matchup" class="field-label spaced-label">Players</label>
+              <select id="matchup" class="select-control">
+                <option value="me-bilari">Me vs Bilari</option>
+                <option value="bilari-oldb">Bilari vs Old-B</option>
+                <option value="me-oldb">Me vs Old-B</option>
+              </select>
+              <div class="mode-selectors">
+                <div class="mode-selector" id="bilariModeWrap">
+                  <label for="bilariMode" class="field-label">Bilari mode</label>
+                  <select id="bilariMode" class="select-control">
+                    <option value="intuition">Intuition</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high" selected>High</option>
+                    <option value="ultra">Ultra</option>
+                  </select>
+                </div>
+                <div class="mode-selector hidden" id="oldbModeWrap">
+                  <label for="oldbMode" class="field-label">Old-B mode</label>
+                  <select id="oldbMode" class="select-control">
+                    <option value="intuition">Intuition</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high" selected>High</option>
+                    <option value="ultra">Ultra</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="model-note" id="oldbNote">
+                <span class="note-icon">i</span>
+                <span>Old-B is the retained early pilot checkpoint (one epoch, first 20,000 puzzle rows). The later pre-correction benchmark weights are not in this project folder.</span>
+              </div>
+
+              <button class="button button-primary full-width" id="startGame" type="button">Start game</button>
+              <div class="game-actions hidden" id="gameActions">
+                <button class="button button-secondary" id="pauseGame" type="button">Pause</button>
+                <button class="button button-secondary" id="undoGame" type="button">Undo</button>
+                <button class="button button-quiet" id="suggestGame" type="button">Suggest move</button>
+              </div>
+              <p class="fine-print">Sides are assigned randomly. Games have no clock. You can pause model-vs-model play at any time.</p>
+            </section>
+
+            <section class="card model-card">
+              <div class="model-card-title"><span class="model-emblem bilari-emblem">B</span><div><strong>Bilari</strong><small>Corrected · epoch 3</small></div><span class="availability" id="bilariAvailability">Checking</span></div>
+              <div class="model-card-title"><span class="model-emblem oldb-emblem">B</span><div><strong>Old-B</strong><small>Retained pilot checkpoint</small></div><span class="availability" id="oldbAvailability">Checking</span></div>
+            </section>
+          </aside>
+
+          <section class="board-column" aria-label="Chessboard">
+            <div class="board-topline">
+              <div>
+                <div class="turn-label" id="turnLabel">Load a position to begin</div>
+                <div class="turn-detail" id="turnDetail">The side to move is read from the FEN.</div>
+              </div>
+              <button class="icon-button" id="rotateBoard" type="button" title="Rotate board" aria-label="Rotate board">⟳</button>
+            </div>
+            <div class="player-strip" id="topPlayer" aria-live="polite"></div>
+            <div class="board-frame">
+              <div id="board" class="chessboard" aria-label="Interactive chessboard"></div>
+            </div>
+            <div class="player-strip bottom-player" id="bottomPlayer" aria-live="polite"></div>
+            <div class="board-bottomline">
+              <span id="boardStatus">Drag a piece, or click it and then a highlighted square.</span>
+              <div class="board-tools">
+                <button class="text-button" id="copyFen" type="button" disabled>Copy FEN</button>
+                <button class="text-button" id="downloadPgn" type="button" disabled>Download PGN</button>
+              </div>
+            </div>
+            <div class="current-fen-wrap">
+              <label for="currentFen">Current position</label>
+              <input id="currentFen" type="text" readonly placeholder="FEN appears here after loading a position" />
+            </div>
+          </section>
+
+          <aside class="analysis-column">
+            <section class="card analysis-card">
+              <div class="analysis-heading">
+                <div><div class="panel-kicker">Move analysis</div><h2 id="analysisTitle">Candidate moves</h2></div>
+                <span class="analysis-spinner hidden" id="spinner" aria-label="Thinking"></span>
+              </div>
+              <div id="analysisMeta" class="analysis-meta">Choose a position and ask for a suggestion.</div>
+              <div id="analysisList" class="analysis-list empty-analysis">
+                <div class="empty-glyph">♘</div>
+                <p>Your top five suggestions will appear here.</p>
+              </div>
+              <div class="analysis-footer" id="analysisFooter"></div>
+            </section>
+
+            <section class="card history-card">
+              <div class="history-heading"><div><div class="panel-kicker">Move record</div><h2>Moves</h2></div><button class="text-button" id="undoPuzzle" type="button" disabled>Undo</button></div>
+              <div id="gameResult" class="game-result hidden"></div>
+              <div id="moveHistory" class="move-history"><span class="history-empty">Moves will appear here.</span></div>
+            </section>
+          </aside>
+        </div>
+
+        <div class="toast hidden" id="toast" role="status"></div>
+        <div class="promotion-backdrop hidden" id="promotionBackdrop" role="dialog" aria-modal="true" aria-labelledby="promotionTitle">
+          <div class="promotion-dialog"><h2 id="promotionTitle">Choose promotion</h2><p>Promote your pawn to:</p><div id="promotionChoices" class="promotion-choices"></div><button id="cancelPromotion" class="button button-quiet" type="button">Cancel</button></div>
+        </div>
+      </main>
+      <footer class="app-footer">Runs on this computer · No online lookup · Puzzle CSV is the only training source</footer>
+    </div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
