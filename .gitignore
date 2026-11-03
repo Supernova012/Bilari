@@ -1,0 +1,23 @@
+.venv/
+.tools/
+.cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.DS_Store
+build/
+dist/
+
+# Locally downloaded Lichess data and generated puzzle shards.
+data/raw/
+data/processed/*
+!data/processed/.gitkeep
+
+# Training and benchmark scratch outputs are not release assets.
+checkpoints/*
+!checkpoints/.gitkeep
+logs/*
+!logs/.gitkeep
+outputs/*
+!outputs/.gitkeep
