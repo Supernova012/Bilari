@@ -43,6 +43,8 @@ Launch the browser GUI:
 
 The GUI offers Puzzle and Game modes, click or drag moves, PGN export, and Intuition/Low/Medium/High/Ultra settings. Ultra is limited to 30 seconds per move. The server listens on the local computer only.
 
+**macOS launch:** Run these commands from Terminal in the cloned repository folder. If Finder opens a `.command` file in a text editor, run it from Terminal with `bash "/path/to/script.command"`.
+
 ## Training from Lichess puzzles
 
 The puzzle CSV and generated training shards are not included. Download the current puzzle export from the [Lichess Open Database](https://database.lichess.org/), then preprocess it:
