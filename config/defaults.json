@@ -1,0 +1,35 @@
+{
+  "model": {
+    "architecture": "compact_residual_cnn",
+    "blocks": 2,
+    "channels": 16,
+    "input_channels": 19,
+    "policy_actions": 4672
+  },
+  "data": {
+    "shard_size": 50000,
+    "train_fraction": 0.9,
+    "validation_fraction": 0.05,
+    "test_fraction": 0.05,
+    "position_grouped_split": true
+  },
+  "training": {
+    "epochs": 5,
+    "batch_size": 256,
+    "learning_rate": 0.0003,
+    "seed": 42,
+    "policy_loss": "legal_candidate_cross_entropy",
+    "value_head_trained_from_puzzles": false
+  },
+  "engine": {
+    "pure_intuition_search_calls": 0,
+    "pure_intuition_policy_calls_per_move": 1,
+    "search_modes_implemented": true,
+    "search_time_ms": {
+      "low": 250,
+      "medium": 1000,
+      "high": 3000
+    },
+    "search_depth": "iterative deepening until the configured time limit"
+  }
+}
