@@ -1,0 +1,11 @@
+engine:
+  dir: "/Users/yourname/Bilari/.venv/bin"
+  name: "bilari-uci"
+  working_dir: "/Users/yourname/Bilari"
+  protocol: "uci"
+  ponder: false
+  engine_options:
+    checkpoint: "/Users/yourname/Bilari/models/bilari-epoch3.pt"
+    device: "auto"
+  uci_options: {}
+  silence_stderr: false
