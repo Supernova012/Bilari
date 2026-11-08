@@ -26,10 +26,10 @@ chess-intuition-benchmark-puzzles = "chess_intuition.training.benchmark_puzzles:
 chess-intuition-estimate-puzzle-glicko = "chess_intuition.training.estimate_puzzle_glicko:main"
 chess-intuition-move = "chess_intuition.play:main"
 chess-intuition-gui = "chess_intuition.gui:main"
+bilari-uci = "chess_intuition.uci:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 chess_intuition = ["web/*.html", "web/*.css", "web/*.js"]
-
